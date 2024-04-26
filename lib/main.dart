@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'read.dart';
+import 'list.dart';
+import 'writeform.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,9 +18,11 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      initialRoute: "/read",
+      initialRoute: "/list",
       routes: {
         "/read": (context) => ReadPage(), //파일이름 아니고 클래스 이름
+        "/list": (context) => ListPage(),
+        "/write": (context) => WriteForm(),
       },
     );
   }

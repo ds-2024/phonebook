@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:phonebook/personVo.dart';
@@ -7,9 +8,17 @@ import 'package:phonebook/personVo.dart';
 class ReadPage extends StatelessWidget {
   const ReadPage({super.key});
 
+  //기본레이아웃
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title: Text("읽기페이지")), body: _ReadPage());
+    return Scaffold(
+        appBar: AppBar(title: Text("읽기페이지")),
+        body: Container(
+          padding: EdgeInsets.all(15),
+          color: Color(0xffd6d6d6),
+          child: _ReadPage(),
+        )
+    );
   }
 }
 
@@ -23,7 +32,9 @@ class _ReadPage extends StatefulWidget {
 
 //할일 정의 클래스(통신, 데이터적용)
 class _ReadPageState extends State<_ReadPage> {
-  //변수
+
+
+  //변수. 미래에 정우성 데이터가 담긴다.
   late Future<PersonVo> personVoFuture;
 
   //초기화함수(1번만 실행됨)
@@ -31,18 +42,22 @@ class _ReadPageState extends State<_ReadPage> {
   void initState() {
     super.initState();
 
-    //추가코드 //데이터불러오기메소드 호출
-    print("initState(): 데이터 가져오기 전");
 
-    personVoFuture = getPersonByNo();
-
-    print("initState(): 데이터 가져오기 후");
   }
 
   //화면그리기
   @override
   Widget build(BuildContext context) {
+    // ModalRoute를 통해 현재 페이지에 전달된 arguments를 가져옵니다.
+    late final args = ModalRoute.of(context)!.settings.arguments as Map;
+    // 'personId' 키를 사용하여 값을 추출합니다.
+    late final personId = args['personId'];
+
+    personVoFuture =getPersonByNo(personId);
+
+
     print("build(): 그리기 작업");
+
     return FutureBuilder(
       future: personVoFuture, //Future<> 함수명, 으로 받은 데이타
       builder: (context, snapshot) {
@@ -156,7 +171,10 @@ class _ReadPageState extends State<_ReadPage> {
   }
 
   //3번(정우성) 데이타 가져오기 return 그림X
-  Future<PersonVo> getPersonByNo() async {
+  Future<PersonVo> getPersonByNo(int pId) async {
+    print("-----------------------------");
+    print(pId);
+    print("-----------------------------");
     try {
       /*----요청처리-------------------*/
       //Dio 객체 생성 및 설정
@@ -167,7 +185,7 @@ class _ReadPageState extends State<_ReadPage> {
 
       // 서버 요청
       final response = await dio.get(
-        'http://localhost:9000/api/persons/modify/110',
+        'http://localhost:9000/api/persons/modify/${pId}',
       );
 
       /*----응답처리-------------------*/
